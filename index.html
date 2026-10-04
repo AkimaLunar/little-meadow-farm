@@ -1,0 +1,559 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Little Meadow Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&family=Cormorant+SC:wght@500&display=swap">
+<style>
+/* Layout: one old photographic print laid on a linen table; inside it, watercolour paper with a painted wreath around a centred postcard of type. */
+:root {
+  --table: #e6e0e4;          /* lavender-grey linen the print rests on */
+  --table-shade: #d8d0d8;
+  --photo: #fcfaf4;          /* the white border of the print */
+  --paper: #f5eedf;          /* ecru watercolour paper */
+  --ink: #4a4053;            /* muted plum ink */
+  --ink-soft: #776b82;
+  --lavender: #8f7fb4;
+  --butter: #e9cf7d;
+  --rose: #d9a1a8;
+  --caption: #9a8f86;        /* pencil caption on the border */
+  --shadow: 40 30 50;
+
+  --display: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+  --label: "Cormorant SC", "Cormorant Garamond", Garamond, serif;
+
+  --edge: clamp(10px, 2.3vmin, 26px);
+  --gutter: clamp(16px, 3.4vmin, 44px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --table: #1f1b23; --table-shade: #17141a; --shadow: 0 0 0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] { --table: #1f1b23; --table-shade: #17141a; --shadow: 0 0 0; color-scheme: dark; }
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 40%, var(--table) 0%, var(--table-shade) 100%);
+  color: var(--ink);
+  font-family: var(--display);
+  -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+  box-sizing: border-box;
+  height: 100%;
+  padding-inline: var(--gutter);
+  padding-block: var(--gutter);
+  display: grid;
+  place-items: center;
+}
+
+/* The photograph */
+.print {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1240px;
+  height: 100%;
+  max-height: 900px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: var(--edge) var(--edge) 0;
+  background: var(--photo);
+  border-radius: 3px;
+  transform: rotate(-0.35deg);
+  box-shadow:
+    0 1px 1px rgb(var(--shadow) / .10),
+    0 6px 14px -4px rgb(var(--shadow) / .16),
+    0 28px 60px -18px rgb(var(--shadow) / .30);
+  position: relative;
+}
+.print::before { /* faint aging of the border */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(140% 120% at 50% 50%, transparent 70%, rgb(180 160 120 / .10) 100%);
+}
+
+.plate {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--paper);
+  box-shadow: inset 0 0 0 1px rgb(120 100 80 / .08), inset 0 0 90px rgb(150 120 90 / .10);
+  min-height: 0;
+}
+#paint {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  mix-blend-mode: multiply;
+  display: block;
+}
+
+.caption {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding-block: calc(var(--edge) * .55) calc(var(--edge) * .7);
+  padding-inline: .2rem;
+  font-style: italic;
+  font-size: clamp(.95rem, 1.6vmin + .4rem, 1.2rem);
+  color: var(--caption);
+  letter-spacing: .01em;
+}
+.caption .place { font-style: normal; font-family: var(--label); letter-spacing: .14em; font-size: .92em; }
+
+/* Postcard type */
+.card {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: clamp(.75rem, 3vmin, 2rem);
+  overflow: auto;
+}
+.content {
+  position: relative;
+  max-width: 40rem;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(.45rem, 1.9vh, 1.35rem);
+}
+.content::before { /* lifts the type off the paint, like a lightly rubbed-out patch of paper */
+  content: ""; position: absolute; inset: -14% -16%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(245 238 223 / .92) 55%, rgb(245 238 223 / 0) 100%);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--label);
+  font-size: clamp(.85rem, .9vmin + .55rem, 1.05rem);
+  letter-spacing: .32em;
+  color: var(--ink-soft);
+  padding-left: .32em;
+}
+h1 {
+  margin: 0;
+  font-weight: 300;
+  font-style: italic;
+  line-height: .86;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-wrap: balance;
+  display: flex; flex-direction: column; align-items: center;
+}
+h1 .name { font-size: clamp(3rem, min(12.5vw, 13vh), 8rem); }
+h1 .farm {
+  font-family: var(--label); font-style: normal; font-weight: 500;
+  font-size: clamp(.95rem, min(2.6vw, 2.6vh), 1.45rem);
+  letter-spacing: .6em; padding-left: .6em;
+  margin-top: clamp(.5rem, 1.6vh, 1.1rem);
+  color: var(--lavender);
+  display: flex; align-items: center; gap: .9em;
+}
+h1 .farm::before, h1 .farm::after {
+  content: ""; width: clamp(1.4rem, 5vw, 3.2rem); height: 1px; background: currentColor; opacity: .5;
+}
+h1 .farm::after { margin-left: -.6em; }
+
+.french {
+  margin: 0;
+  font-style: italic;
+  font-size: clamp(1.05rem, min(2.4vw, 2.5vh), 1.4rem);
+  color: var(--ink-soft);
+}
+
+.flowers {
+  margin: 0;
+  max-width: 30ch;
+  font-size: clamp(1.15rem, min(3vw, 3vh), 1.65rem);
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.flowers em { font-weight: 400; color: var(--lavender); }
+
+/* Bloom calendar */
+.season { display: grid; gap: .45rem; justify-items: center; }
+.season h2 {
+  margin: 0; font-family: var(--label); font-weight: 500;
+  font-size: clamp(.78rem, .6vmin + .55rem, .92rem);
+  letter-spacing: .26em; padding-left: .26em; color: var(--ink-soft);
+}
+.season ol {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: .35rem clamp(.9rem, 2.4vw, 1.8rem);
+}
+.season li {
+  display: grid; grid-template-columns: auto auto; align-items: center;
+  column-gap: .45rem; text-align: left; line-height: 1.05;
+}
+.dab {
+  grid-row: span 2;
+  width: .95rem; height: .8rem;
+  border-radius: 58% 42% 55% 45% / 52% 60% 40% 48%;
+  background: radial-gradient(circle at 40% 45%, var(--c) 0 35%, transparent 75%), var(--c);
+  opacity: .72;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / .06);
+  transform: rotate(var(--r, 0deg));
+}
+.season .f { font-style: italic; font-size: clamp(1rem, min(2vw, 2.3vh), 1.18rem); color: var(--ink); }
+.season .m {
+  font-family: var(--label); font-size: clamp(.72rem, min(1.4vw, 1.6vh), .82rem);
+  letter-spacing: .12em; color: var(--ink-soft); font-variant-numeric: lining-nums;
+}
+
+/* Wholesale */
+.wholesale { display: grid; gap: .15rem; justify-items: center; }
+.wholesale .label {
+  font-family: var(--label); font-size: clamp(.78rem, .6vmin + .55rem, .92rem);
+  letter-spacing: .26em; padding-left: .26em; color: var(--ink-soft);
+}
+.mailrow { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+.mail {
+  font-style: italic; font-size: clamp(1.25rem, min(3.4vw, 3.3vh), 1.75rem);
+  color: var(--ink); text-decoration: none;
+  background-image: linear-gradient(var(--butter), var(--butter));
+  background-size: 100% .38em; background-position: 0 88%; background-repeat: no-repeat;
+  padding-inline: .1em;
+  user-select: all;
+  transition: background-size .35s ease;
+}
+.mail:hover { background-size: 100% .9em; }
+.copy {
+  font: inherit; font-family: var(--label); font-size: .82rem; letter-spacing: .16em;
+  color: var(--lavender); background: none; border: 1px solid currentColor; border-radius: 99px;
+  padding: .12rem .7rem .2rem; cursor: pointer; opacity: .8;
+  transition: opacity .2s, background-color .2s;
+}
+.copy:hover { opacity: 1; background: rgb(143 127 180 / .08); }
+.mail:focus-visible, .copy:focus-visible { outline: 2px solid var(--lavender); outline-offset: 3px; border-radius: 3px; }
+
+/* Drifting petals */
+.petals { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.petal {
+  position: absolute; top: -8%; left: var(--x);
+  width: var(--s); height: var(--s);
+  opacity: .5; mix-blend-mode: multiply;
+  animation: drift var(--d) linear var(--delay) infinite;
+}
+@keyframes drift {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(calc(var(--dx) * .35), 28vh) rotate(calc(var(--rot) * .3)); }
+  50%  { transform: translate(calc(var(--dx) * .5), 56vh) rotate(calc(var(--rot) * .5)); }
+  75%  { transform: translate(calc(var(--dx) * .85), 84vh) rotate(calc(var(--rot) * .8)); }
+  100% { transform: translate(var(--dx), 115vh) rotate(var(--rot)); }
+}
+
+/* Entrance */
+.content > * { animation: rise 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.content > :nth-child(2) { animation-delay: .12s; }
+.content > :nth-child(3) { animation-delay: .3s; }
+.content > :nth-child(4) { animation-delay: .45s; }
+.content > :nth-child(5) { animation-delay: .6s; }
+.content > :nth-child(6) { animation-delay: .75s; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .content > * { animation: none; }
+  .petals { display: none; }
+}
+
+@media (max-width: 560px) {
+  .print { transform: none; }
+  .season ol { max-width: 22rem; }
+}
+@media (max-height: 640px) and (min-width: 561px) {
+  .content { gap: .5rem; }
+}
+</style>
+
+<main class="stage">
+  <article class="print" aria-label="Little Meadow Farm">
+    <div class="plate" id="plate">
+      <canvas id="paint" aria-hidden="true"></canvas>
+      <div class="petals" id="petals" aria-hidden="true"></div>
+      <div class="card">
+        <div class="content" id="content">
+          <p class="eyebrow">Fleurs de saison</p>
+          <h1><span class="name">Little Meadow</span><span class="farm">Farm</span></h1>
+          <p class="french">le petit pré, sur l’île de Vancouver</p>
+          <p class="flowers">Peonies, daffodils, sunflowers, lavender, and <em>of course</em> meadow flowers.</p>
+          <section class="season" aria-labelledby="season-h">
+            <h2 id="season-h">Calendrier de floraison</h2>
+            <ol>
+              <li><span class="dab" style="--c:#efd27c;--r:-8deg"></span><span class="f">Daffodils</span><span class="m">Mar – Apr</span></li>
+              <li><span class="dab" style="--c:#e3a7b0;--r:12deg"></span><span class="f">Peonies</span><span class="m">May – Jun</span></li>
+              <li><span class="dab" style="--c:#a9bc95;--r:-4deg"></span><span class="f">Meadow</span><span class="m">May – Sep</span></li>
+              <li><span class="dab" style="--c:#a897cc;--r:20deg"></span><span class="f">Lavender</span><span class="m">Jun – Aug</span></li>
+              <li><span class="dab" style="--c:#e2b453;--r:-14deg"></span><span class="f">Sunflowers</span><span class="m">Jul – Sep</span></li>
+            </ol>
+          </section>
+          <div class="wholesale">
+            <span class="label">Wholesale orders</span>
+            <div class="mailrow">
+              <a class="mail" id="mail" href="mailto:admin@littlemeadow.farm">admin@littlemeadow.farm</a>
+              <button class="copy" id="copy" type="button">copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="caption">
+      <span class="place">Cedar, BC</span>
+      <span>Petit Pré</span>
+    </footer>
+  </article>
+</main>
+
+<script>
+(() => {
+  const plate = document.getElementById('plate');
+  const canvas = document.getElementById('paint');
+  const content = document.getElementById('content');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let ctx = canvas.getContext('2d');
+  let W = 0, H = 0, R, raf = 0;
+
+  /* ---------- seeded randomness ---------- */
+  const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const rand = (a = 0, b = 1) => a + R() * (b - a);
+  const gauss = () => { let u = 0, v = 0; while (!u) u = R(); while (!v) v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const rgba = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; };
+  const D = d => d * Math.PI / 180;
+
+  /* ---------- watercolour primitives (layered, deformed polygons) ---------- */
+  function basePoly(cx, cy, rx, ry, rot, n) {
+    const c = Math.cos(rot), s = Math.sin(rot), pts = [];
+    for (let i = 0; i < n; i++) {
+      const t = i / n * Math.PI * 2, x = Math.cos(t) * rx, y = Math.sin(t) * ry;
+      pts.push({ x: cx + x * c - y * s, y: cy + x * s + y * c, v: rand(.45, 1.1) });
+    }
+    return pts;
+  }
+  function deform(pts, depth, amt) {
+    for (let d = 0; d < depth; d++) {
+      const out = [];
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[i], b = pts[(i + 1) % pts.length];
+        const len = Math.hypot(b.x - a.x, b.y - a.y), v = (a.v + b.v) / 2;
+        out.push(a, { x: (a.x + b.x) / 2 + gauss() * len * v * amt, y: (a.y + b.y) / 2 + gauss() * len * v * amt, v: v * rand(.85, 1.08) });
+      }
+      pts = out;
+    }
+    return pts;
+  }
+  function trace(p) { ctx.beginPath(); ctx.moveTo(p[0].x, p[0].y); for (let i = 1; i < p.length; i++) ctx.lineTo(p[i].x, p[i].y); ctx.closePath(); }
+
+  function blob(cx, cy, rx, ry, rot, col, o = {}) {
+    const layers = o.layers ?? 16, alpha = o.alpha ?? .06, amt = o.amt ?? .16;
+    const base = deform(basePoly(cx, cy, rx, ry, rot, o.n ?? 9), 2, amt);
+    const polys = []; for (let i = 0; i < layers; i++) polys.push(deform(base, 2, amt * .85));
+    const edge = o.edge ?? .09, edgeCol = o.edgeCol || col;
+    return () => {
+      ctx.fillStyle = rgba(col, alpha);
+      for (const p of polys) { trace(p); ctx.fill(); }
+      if (edge) { ctx.strokeStyle = rgba(edgeCol, edge); ctx.lineWidth = .8; trace(polys[0]); ctx.stroke(); }
+    };
+  }
+  function stroke(x1, y1, x2, y2, bend, col, w, alpha = .32) {
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, len = Math.hypot(x2 - x1, y2 - y1);
+    const nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
+    const passes = [0, 1, 2].map(() => ({ j: rand(-1, 1) * w * .5, b: bend + rand(-.04, .04) * len }));
+    return () => {
+      ctx.lineCap = 'round';
+      for (const p of passes) {
+        ctx.strokeStyle = rgba(col, alpha); ctx.lineWidth = w;
+        ctx.beginPath(); ctx.moveTo(x1 + p.j, y1);
+        ctx.quadraticCurveTo(mx + nx * p.b, my + ny * p.b, x2 + p.j, y2); ctx.stroke();
+      }
+    };
+  }
+
+  /* ---------- palette for the paint ---------- */
+  const P = {
+    peonyPale: '#f0c3c6', peony: '#e2a0aa', peonyDeep: '#c27887',
+    daff: '#f2d98a', trumpet: '#e6b257', trumpetDeep: '#d4953f',
+    sun: '#e4bb58', sun2: '#d6a443', sunCore: '#77573f', sunDot: '#4f3a2c',
+    lav: '#a693c9', lav2: '#8a78b6',
+    leaf: '#a2b18e', leaf2: '#86997a', stem: '#8a9c7a',
+    corn: '#8d9fcf', cornDeep: '#6e74ad',
+    cham: '#ebe4d4', chamEdge: '#c9bba1', chamCore: '#e2b84e',
+    seed: '#c5ae86', butterWash: '#f1dc95', lavWash: '#c6b8de', roseWash: '#efc8c4'
+  };
+
+  /* ---------- flowers ---------- */
+  const T = [];  // paint tasks in order
+  const add = f => T.push(f);
+
+  function leaf(x, y, len, ang, col = P.leaf) {
+    add(blob(x + Math.cos(ang) * len / 2, y + Math.sin(ang) * len / 2, len / 2, len * .15, ang, col, { amt: .07, n: 8, alpha: .07, layers: 12 }));
+  }
+  function peony(x, y, r) {
+    add(blob(x, y, r * 1.02, r * .92, rand(0, 3), P.peonyPale, { alpha: .035, layers: 12, amt: .2 }));
+    const a0 = rand(0, 6);
+    for (let i = 0; i < 8; i++) { const a = a0 + i / 8 * Math.PI * 2 + rand(-.15, .15); add(blob(x + Math.cos(a) * r * .52, y + Math.sin(a) * r * .48, r * .42, r * .32, a, P.peonyPale, { alpha: .055, amt: .22 })); }
+    for (let i = 0; i < 6; i++) { const a = a0 + .4 + i / 6 * Math.PI * 2; add(blob(x + Math.cos(a) * r * .28, y + Math.sin(a) * r * .26, r * .3, r * .23, a, P.peony, { alpha: .055, amt: .22 })); }
+    for (let i = 0; i < 5; i++) { const a = a0 + i / 5 * Math.PI * 2; add(blob(x + Math.cos(a) * r * .1, y + Math.sin(a) * r * .1, r * .15, r * .12, a, P.peonyDeep, { alpha: .05, layers: 12, amt: .2 })); }
+  }
+  function daffodil(x, y, r, rot) {
+    for (let i = 0; i < 6; i++) { const a = rot + i * Math.PI / 3; add(blob(x + Math.cos(a) * r * .46, y + Math.sin(a) * r * .46, r * .46, r * .22, a, P.daff, { alpha: .07, amt: .1, n: 8 })); }
+    add(blob(x, y, r * .26, r * .26, 0, P.trumpet, { alpha: .08, amt: .18, layers: 14 }));
+    add(blob(x, y, r * .13, r * .13, 0, P.trumpetDeep, { alpha: .07, amt: .2, layers: 10 }));
+  }
+  function sunflower(x, y, r) {
+    const a0 = rand(0, 1);
+    for (let ring = 0; ring < 2; ring++) for (let i = 0; i < 15; i++) {
+      const a = a0 + (i + ring * .5) / 15 * Math.PI * 2, d = r * (ring ? .56 : .64);
+      add(blob(x + Math.cos(a) * d, y + Math.sin(a) * d, r * .34, r * .11, a, ring ? P.sun2 : P.sun, { alpha: .06, amt: .09, n: 8, layers: 12 }));
+    }
+    add(blob(x, y, r * .33, r * .32, 0, P.sunCore, { alpha: .07, layers: 20, amt: .12 }));
+    add(blob(x, y, r * .2, r * .2, 0, P.sunDot, { alpha: .06, layers: 12, amt: .14 }));
+    for (let i = 0; i < 9; i++) { const a = rand(0, 6.3), d = rand(0, r * .25); add(blob(x + Math.cos(a) * d, y + Math.sin(a) * d, r * .03, r * .03, 0, P.sunDot, { alpha: .18, layers: 5, amt: .3, edge: 0 })); }
+  }
+  function lavender(x, y, len, ang) {
+    const tx = x + Math.cos(ang) * len, ty = y + Math.sin(ang) * len;
+    add(stroke(x, y, tx, ty, len * rand(-.06, .06), P.stem, Math.max(1, len * .012)));
+    const nx = -Math.sin(ang), ny = Math.cos(ang), steps = 9;
+    for (let i = 0; i < steps; i++) {
+      const t = .48 + i / steps * .52, s = len * .042 * (1 - i / steps * .55);
+      const cx = x + (tx - x) * t, cy = y + (ty - y) * t;
+      for (const side of [-1, 1]) add(blob(cx + nx * side * s * .8, cy + ny * side * s * .8, s, s * .75, ang + side * .6, i % 2 ? P.lav : P.lav2, { alpha: .11, layers: 8, amt: .2, n: 7 }));
+    }
+  }
+  function cornflower(x, y, r) {
+    for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2; add(blob(x + Math.cos(a) * r * .5, y + Math.sin(a) * r * .5, r * .42, r * .26, a, P.corn, { alpha: .1, layers: 8, amt: .25, n: 7 })); }
+    add(blob(x, y, r * .18, r * .18, 0, P.cornDeep, { alpha: .14, layers: 6, amt: .2 }));
+  }
+  function chamomile(x, y, r) {
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; add(blob(x + Math.cos(a) * r * .55, y + Math.sin(a) * r * .55, r * .38, r * .14, a, P.cham, { alpha: .14, layers: 5, amt: .08, n: 7, edge: .28, edgeCol: P.chamEdge })); }
+    add(blob(x, y, r * .2, r * .2, 0, P.chamCore, { alpha: .16, layers: 8, amt: .18 }));
+  }
+  function grass(x, y, len, ang, seeds) {
+    const tx = x + Math.cos(ang) * len, ty = y + Math.sin(ang) * len;
+    add(stroke(x, y, tx, ty, len * rand(-.12, .12), P.leaf2, Math.max(.8, len * .01), .3));
+    if (seeds) for (let i = 0; i < 6; i++) {
+      const t = .74 + i * .045, s = len * .028;
+      add(blob(x + (tx - x) * t, y + (ty - y) * t, s, s * .55, ang + (i % 2 ? .5 : -.5), P.seed, { alpha: .14, layers: 5, amt: .2, n: 7, edge: 0 }));
+    }
+  }
+
+  /* ---------- composition ---------- */
+  function contentBox() {
+    const p = plate.getBoundingClientRect(), c = content.getBoundingClientRect();
+    return { l: c.left - p.left - 10, t: c.top - p.top - 10, r: c.right - p.left + 10, b: c.bottom - p.top + 10 };
+  }
+  function build() {
+    R = mulberry(20210521); T.length = 0;
+    const s = Math.min(Math.min(W, H) * .4, Math.max(W, H) * .25);
+    const box = contentBox();
+    const clear = (x, y) => !(x > box.l && x < box.r && y > box.t && y < box.b);
+
+    // lower-left bouquet
+    const A = { x: W * .07 + s * .3, y: H - s * .42 };
+    for (let i = 0; i < 7; i++) grass(A.x + rand(-.4, 1.4) * s, H + 4, rand(.45, .9) * s, D(-90 + rand(-22, 22)), i % 2 === 0);
+    for (let i = 0; i < 5; i++) lavender(A.x - .25 * s + i * .1 * s, A.y + .55 * s, rand(.95, 1.3) * s, D(-82 - i * 7 + rand(-4, 4)));
+    for (let i = 0; i < 7; i++) leaf(A.x + rand(-.1, .2) * s, A.y + rand(-.05, .15) * s, rand(.32, .52) * s, D(-200 + i * 32 + rand(-8, 8)), i % 2 ? P.leaf : P.leaf2);
+    add(stroke(A.x - .25 * s, A.y + .6 * s, A.x - .28 * s, A.y - .45 * s, .05 * s, P.stem, 2.2));
+    sunflower(A.x - .28 * s, A.y - .5 * s, .27 * s);
+    peony(A.x + .14 * s, A.y - .02 * s, .34 * s);
+    peony(A.x + .62 * s, A.y + .24 * s, .17 * s);
+    daffodil(A.x + .98 * s, A.y + .2 * s, .16 * s, rand(0, 1));
+    for (let i = 0; i < 5; i++) cornflower(A.x + rand(.35, 1.6) * s, A.y + rand(.0, .45) * s, .07 * s);
+    for (let i = 0; i < 6; i++) chamomile(A.x + rand(-.45, 1.5) * s, A.y + rand(-.15, .48) * s, .08 * s);
+
+    // upper-right spray
+    const B = { x: W - W * .07 - s * .25, y: s * .42 };
+    for (let i = 0; i < 6; i++) leaf(B.x + rand(-.1, .15) * s, B.y + rand(-.1, .1) * s, rand(.3, .48) * s, D(95 + i * 30 + rand(-8, 8)), i % 2 ? P.leaf : P.leaf2);
+    for (let i = 0; i < 3; i++) lavender(B.x + .25 * s + i * .08 * s, B.y + .65 * s, rand(.8, 1) * s, D(-122 - i * 9));
+    for (let i = 0; i < 4; i++) grass(B.x + rand(-.2, .5) * s, B.y + rand(.4, .7) * s, rand(.45, .7) * s, D(-60 - i * 12), i % 2 === 1);
+    peony(B.x - .05 * s, B.y - .4 * s, .16 * s);
+    sunflower(B.x + .16 * s, B.y - .06 * s, .24 * s);
+    daffodil(B.x - .38 * s, B.y + .16 * s, .17 * s, rand(0, 1));
+    daffodil(B.x + .08 * s, B.y + .46 * s, .14 * s, rand(0, 1));
+    for (let i = 0; i < 4; i++) cornflower(B.x + rand(-.95, .4) * s, B.y + rand(-.35, .6) * s, .065 * s);
+    for (let i = 0; i < 4; i++) chamomile(B.x + rand(-1, .4) * s, B.y + rand(-.3, .55) * s, .075 * s);
+
+    // loose wreath trailing between the two, around the type
+    const cx = W / 2, cy = H / 2, rx = W * .47, ry = H * .44;
+    const arc = (from, to, n) => {
+      for (let i = 0; i < n; i++) {
+        const a = D(from + (to - from) * (i + rand(-.3, .3)) / (n - 1));
+        const x = cx + Math.cos(a) * rx + rand(-8, 8), y = cy + Math.sin(a) * ry + rand(-8, 8);
+        if (!clear(x, y)) continue;
+        const k = i % 4;
+        if (k === 0) grass(x, y + .15 * s, rand(.25, .4) * s, a + D(rand(70, 110)), true);
+        else if (k === 1) cornflower(x, y, .05 * s);
+        else if (k === 2) leaf(x, y, .2 * s, a + D(rand(60, 120)), P.leaf);
+        else chamomile(x, y, .055 * s);
+      }
+    };
+    arc(135, 205, 8);
+    arc(-35, 30, 8);
+    arc(60, 110, 5);
+  }
+
+  /* ---------- painting ---------- */
+  function size() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = plate.clientWidth; H = plate.clientHeight;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+  }
+  function paint(animate) {
+    cancelAnimationFrame(raf);
+    size(); build();
+    let i = 0;
+    if (!animate) { while (i < T.length) T[i++](); return; }
+    const t0 = performance.now(), total = 2200; // the bouquet paints itself in over ~2s
+    const step = () => {
+      const target = Math.min(T.length, Math.ceil(T.length * (performance.now() - t0) / total));
+      while (i < target) T[i++]();
+      if (i < T.length) raf = requestAnimationFrame(step);
+    };
+    step();
+  }
+
+  /* ---------- paper grain ---------- */
+  function grain() {
+    const g = document.createElement('canvas'); g.width = g.height = 180;
+    const gx = g.getContext('2d'), img = gx.createImageData(180, 180); R = mulberry(7);
+    for (let i = 0; i < img.data.length; i += 4) { const v = 120 + R() * 80; img.data[i] = v; img.data[i + 1] = v * .95; img.data[i + 2] = v * .85; img.data[i + 3] = R() * 22; }
+    gx.putImageData(img, 0, 0);
+    plate.style.backgroundImage = `url(${g.toDataURL()}), radial-gradient(60% 55% at 92% 8%, rgb(241 220 149 / .28), transparent 70%), radial-gradient(60% 60% at 6% 96%, rgb(198 184 222 / .30), transparent 70%), radial-gradient(40% 35% at 35% 100%, rgb(239 200 196 / .25), transparent 70%)`;
+  }
+
+  /* ---------- drifting petals ---------- */
+  function petals() {
+    if (reduce) return;
+    const host = document.getElementById('petals');
+    const sprite = col => {
+      const c = document.createElement('canvas'); c.width = c.height = 64;
+      const keep = ctx; ctx = c.getContext('2d');
+      blob(32, 32, 20, 12, rand(0, 3), col, { alpha: .14, layers: 10, amt: .2 })();
+      ctx = keep; return c.toDataURL();
+    };
+    R = mulberry(99);
+    const imgs = [sprite(P.peony), sprite(P.peonyPale), sprite(P.lav), sprite(P.daff), sprite(P.peony)];
+    imgs.forEach((src, i) => {
+      const el = new Image(); el.src = src; el.className = 'petal'; el.alt = '';
+      const dur = 26 + i * 6;
+      el.style.cssText = `--x:${8 + i * 19 + rand(-5, 5)}%;--s:${rand(14, 22)}px;--d:${dur}s;--delay:${-rand(0, dur)}s;--dx:${rand(-60, 120)}px;--rot:${rand(180, 540)}deg`;
+      host.appendChild(el);
+    });
+  }
+
+  /* ---------- copy email ---------- */
+  const copyBtn = document.getElementById('copy');
+  copyBtn.addEventListener('click', () => {
+    const email = 'admin@littlemeadow.farm';
+    const done = () => { copyBtn.textContent = 'copied'; setTimeout(() => copyBtn.textContent = 'copy', 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(document.getElementById('mail')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent = 'selected'; setTimeout(() => copyBtn.textContent = 'copy', 1800); };
+    try { navigator.clipboard.writeText(email).then(done, fallback); } catch (e) { fallback(); }
+  });
+
+  /* ---------- start ---------- */
+  grain();
+  const start = () => { paint(!reduce); petals(); };
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => paint(false), 150); });
+})();
+</script>
+
+</body></html>
