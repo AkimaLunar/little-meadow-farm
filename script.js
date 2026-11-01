@@ -4,7 +4,7 @@
   const air = document.getElementById('air');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const img = new Image();
-  img.src = "assets/meadow.jpg";
+  img.src = "assets/meadow.png";
 
   let W = 0, H = 0, dpr = 1, grainTile = null;
 
