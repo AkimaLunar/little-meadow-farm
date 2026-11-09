@@ -25,6 +25,7 @@
 
   --edge: clamp(10px, 2.3vmin, 26px);
   --gutter: clamp(16px, 3.4vmin, 44px);
+  --meadow-reveal-duration: 0.25s;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) { --table: #1d1a16; --table-shade: #13110e; --table-ink: #cfc5b4; --table-accent: #e2c27a; --shadow: 0 0 0; color-scheme: dark; }
@@ -73,8 +74,21 @@ body {
   position: relative; overflow: hidden; min-height: 0;
   background-color: var(--photo);
 }
+.meadow-paint {
+  position: absolute; inset: 0;
+  background-color: #373A2B;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
 .plate canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-#meadow { filter: url(#watercolour); }
+#meadow { opacity: 0; }
+.plate.is-loaded #meadow { animation: meadow-reveal var(--meadow-reveal-duration) ease-in-out both; }
+#air { opacity: 0; transition: opacity var(--meadow-reveal-duration) ease-in-out; }
+.plate.is-loaded #air { opacity: 1; }
+@keyframes meadow-reveal {
+  from { opacity: 0; filter: blur(12px); }
+  to { opacity: 1; filter: blur(0); }
+}
 .watercolour-filter { position: absolute; }
 
 .caption {
@@ -154,7 +168,11 @@ h1 .farm {
 .content > :nth-child(4) { animation-delay: .5s; }
 .content > :nth-child(5) { animation-delay: .65s; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .content > * { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .content > *, .plate.is-loaded #meadow { animation: none; }
+  #air { transition: none; }
+  .plate.is-loaded #meadow { opacity: 1; }
+}
 
 @media (max-width: 560px) {
   .print { transform: none; }

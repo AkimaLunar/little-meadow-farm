@@ -1,12 +1,14 @@
 (() => {
   const plate = document.getElementById('plate');
+  const meadowPaint = document.getElementById('meadow-paint');
   const meadow = document.getElementById('meadow');
   const air = document.getElementById('air');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const img = new Image();
-  img.src = "assets/meadow.png";
+  img.fetchPriority = 'high';
 
-  let W = 0, H = 0, dpr = 1, grainTile = null;
+  let W = 0, H = 0, dpr = 1, grainTile = null, imageReady = false;
+  let edgeSize = 0, edgeStrokes = [];
 
   /* seeded randomness for the painted edge */
   const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
@@ -34,9 +36,28 @@
   function trace(c, p) { c.beginPath(); c.moveTo(p[0].x, p[0].y); for (let i = 1; i < p.length; i++) c.lineTo(p[i].x, p[i].y); c.closePath(); }
   const off = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
 
+  /* A shared mask keeps the fallback and image inside the same stationary edge. */
+  function paintEdge() {
+    if (!W || !H) return;
+    R = mulberry(2021);
+    const m = Math.min(W, H) * 0.03;
+    const mask = off(Math.round(W * dpr), Math.round(H * dpr)), mc = mask.getContext('2d');
+    mc.scale(dpr, dpr);
+    const base = deform(rectPoly(m * 0.75, 7), 2, 0.04);
+    for (let i = 0; i < 40; i++) { mc.fillStyle = 'rgba(0,0,0,0.06)'; trace(mc, deform(base, 3, 0.045)); mc.fill(); }
+    mc.filter = `blur(${m * 0.9}px)`; mc.fillStyle = '#000';
+    mc.fillRect(m * 2.2, m * 2.2, W - m * 4.4, H - m * 4.4);
+    mc.filter = 'none';
+    edgeSize = m;
+    edgeStrokes = Array.from({ length: 5 }, () => deform(base, 3, 0.03));
+    const maskImage = `url("${mask.toDataURL()}")`;
+    meadowPaint.style.webkitMaskImage = maskImage;
+    meadowPaint.style.maskImage = maskImage;
+  }
+
   /* ---------- the painted meadow ---------- */
   function paintMeadow() {
-    if (!img.complete || !img.naturalWidth) return;
+    if (!imageReady || !W || !H) return;
     const pw = Math.round(W * dpr), ph = Math.round(H * dpr);
     meadow.width = pw; meadow.height = ph;
 
@@ -60,28 +81,15 @@
     p.fillStyle = p.createPattern(grainTile, 'repeat'); p.fillRect(0, 0, pw, ph);
     p.globalAlpha = 1; p.globalCompositeOperation = 'source-over';
 
-    // 2. ragged watercolour edge as a mask
-    R = mulberry(2021);
-    const m = Math.min(W, H) * 0.03;
-    const mask = off(pw, ph), mc = mask.getContext('2d');
-    mc.scale(dpr, dpr);
-    const base = deform(rectPoly(m * 0.75, 7), 2, 0.04);
-    for (let i = 0; i < 40; i++) { mc.fillStyle = 'rgba(0,0,0,0.06)'; trace(mc, deform(base, 3, 0.045)); mc.fill(); }
-    mc.filter = `blur(${m * 0.9}px)`; mc.fillStyle = '#000';
-    mc.fillRect(m * 2.2, m * 2.2, W - m * 4.4, H - m * 4.4);
-    mc.filter = 'none';
-
-    // 3. pigment pooling along the edge
+    // 2. pigment pooling along the shared edge
     p.save(); p.scale(dpr, dpr);
-    for (let i = 0; i < 5; i++) { p.strokeStyle = 'rgba(60,40,26,0.06)'; p.lineWidth = m * 0.35; trace(p, deform(base, 3, 0.03)); p.stroke(); }
+    for (const edge of edgeStrokes) { p.strokeStyle = 'rgba(60,40,26,0.06)'; p.lineWidth = edgeSize * 0.35; trace(p, edge); p.stroke(); }
     p.restore();
-
-    p.globalCompositeOperation = 'destination-in';
-    p.drawImage(mask, 0, 0);
 
     const ctx = meadow.getContext('2d');
     ctx.clearRect(0, 0, pw, ph);
     ctx.drawImage(pic, 0, 0);
+    plate.classList.add('is-loaded');
   }
 
   /* ---------- paper grain ---------- */
@@ -210,12 +218,23 @@
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = plate.clientWidth; H = plate.clientHeight;
     air.width = Math.round(W * dpr); air.height = Math.round(H * dpr);
-    paintGrain(); paintMeadow(); buildRays(); buildSpecks();
+    paintGrain(); paintEdge(); paintMeadow(); buildRays(); buildSpecks();
   }
 
   if (!sprites) buildSprites();
   layout();
-  img.decode ? img.decode().then(paintMeadow, paintMeadow) : (img.onload = paintMeadow);
+  img.onload = async () => {
+    try {
+      if (img.decode) await img.decode();
+    } catch (error) {
+      console.error('Unable to decode the meadow background image.', error);
+      return;
+    }
+    imageReady = true;
+    paintMeadow();
+  };
+  img.onerror = () => console.error('Unable to load the meadow background image.');
+  img.src = "assets/meadow.png";
   requestAnimationFrame(frame);
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { layout(); if (reduce) requestAnimationFrame(frame); }, 150); });
 
